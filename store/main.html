@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <title>Ecom</title>
+  <meta charset="UTF-8" />
+
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ecommerce website</title>
+  <link rel="stylesheet" href="{% static " css/main.css" %}" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+
+  <script src="https://kit.fontawesome.com/0e53af926d.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+  <!-- script for cookie -->
+  <script type="text/javascript">
+    var user = "{{request.user}}";
+
+    function getToken(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        var cookies = document.cookie.split(";");
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(
+              cookie.substring(name.length + 1)
+            );
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+    var csrftoken = getToken("csrftoken");
+
+    function getCookie(name) {
+      // Split cookie string and get all individual name=value pairs in an array
+      var cookieArr = document.cookie.split(";");
+
+      // Loop through the array elements
+      for (var i = 0; i < cookieArr.length; i++) {
+        var cookiePair = cookieArr[i].split("=");
+
+        /* Removing whitespace at the beginning of the cookie name
+    and compare it with the given string */
+        if (name == cookiePair[0].trim()) {
+          // Decode the cookie value and return
+          return decodeURIComponent(cookiePair[1]);
+        }
+      }
+
+      // Return null if not found
+      return null;
+    }
+    var cart = JSON.parse(getCookie("cart"));
+
+    if (cart == undefined) {
+      cart = {};
+      console.log("Cart Created!", cart);
+      document.cookie = "cart=" + JSON.stringify(cart) + ";domain=;path=/";
+    }
+    console.log("Cart:", cart);
+  </script>
+  <!-- script for cookie end-->
+
+</head>
+
+<body>
+  <header>
+    <div id="header">
+      <div class="header-logo">
+        <a href="{% url 'store' %}"><img src="{% static " image/logo.png" %}" alt="..." style="width:60px" /></a>
+      </div>
+      <div class="header-list">
+        <nav class="header-list-nav">
+          <ul>
+            <li><a href="{% url 'store' %}">Home</a></li>
+            <li><a href="{% url 'store' %}">Shop</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">About</a></li>
+            <li>
+              <a href="{% url 'add_list' %}" style="
+                    padding: 9px;
+                    background-color: rgb(253, 184, 138);
+                    border-radius: 10px;
+                    text-decoration: none;
+                    color: rgb(0, 0, 0);
+                  ">Create List</a>
+            </li>
+            <li><a href="{% url "ml_cart" %}">ml_cart</a></li>
+          </ul>
+        </nav>
+        <div class="header-list-icon">
+          <a href="{% url 'cart' %}"><i class="fa fa-bag-shopping"></i></a>
+        </div>
+        <p id="cart-total">{{cartItems}}</p>
+      </div>
+    </div>
+  </header>
+  <main>
+    <br />
+    {% block content %} {% endblock content %}
+  </main>
+  <footer>
+    <div id="footer">
+      <div class="contact">
+        <a href="indext.html"><img src="{% static " image/logo.png" %}" alt="..." style="width:100px" /></a>
+        <br />
+        <br />
+        <br />
+        <h3>Contact</h3>
+        <address>
+          <p><b>Address:</b> DONT'N KNOW</p>
+          <p><b>Phone:</b> +91 9008385515</p>
+          <p><b>Hours</b> 10:00 - 18:00. Mon - Sat</p>
+        </address>
+        <h3>Follow Us</h3>
+        <br />
+        <div class="socials">
+          <a href="#"><i class="fa-brands fa-facebook-square"></i></a>
+          <a href="#"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#"><i class="fa-brands fa-telegram"></i></a>
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        </div>
+      </div>
+      <div class="about">
+        <h3>About</h3>
+        <br />
+        <a href="#">About Us</a>
+        <a href="#">Delivery Information</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Contact Us</a>
+      </div>
+      <div class="myaccount">
+        <h3>My account</h3>
+        <br />
+        <a href="#">Sign In</a>
+        <a href="#">View Cart</a>
+        <a href="#">My Wishlist</a>
+        <a href="#">Track My Order</a>
+        <a href="#">Help</a>
+      </div>
+      <div class="install">
+        <h3>Install App</h3>
+        <br />
+        <p>From App Store or Google Play</p>
+        <div class="download">
+          <a href="#"><img src="{% static " image/pay/app.jpg" %}" alt="..." /></a>
+          <a href="#"><img src="{% static " image/pay/play.jpg" %}" alt="..." /></a>
+        </div>
+        <p>Secured Payment Gateways</p>
+        <img src="{% static " image/pay/pay.png" %}" alt="..." />
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+    crossorigin="anonymous"></script>
+
+  <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+</body>
+
+</html>

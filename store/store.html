@@ -1,0 +1,109 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+
+<section id="hero">
+  <h4>Trade-in-offer</h4>
+  <h2>Super value deals</h2>
+  <h1>On all products</h1>
+  <p>Save more coupons & up to 70% off!</p>
+  <button>Shop now</button>
+</section>
+
+<section id="banners" class="section-p1">
+  <div class="big-banners">
+    <div class="big-banners-1">
+      <h4>Crazy deals</h4>
+      <h2>Buy 1 get 1 free</h2>
+      <span>The best classic dress is on sale at Coro</span>
+      <button class="banner-btn">Learn More</button>
+    </div>
+    <div class="big-banners-2">
+      <h4>Spring/Summer</h4>
+      <h2>Upcoming season</h2>
+      <span>The best classic dress is on sale at Cara</span>
+      <button class="banner-btn">Collection</button>
+    </div>
+  </div>
+  <div class="small-banners">
+    <div class="small-banners-1">
+      <h2>SEASONAL SALE</h2>
+      <h5>Winter Collection 50% Off</h5>
+    </div>
+    <div class="small-banners-2">
+      <h2>NEW FOOTWEAR COLLECTION</h2>
+      <h5>Spring/Summer 2022</h5>
+    </div>
+    <div class="small-banners-3">
+      <h2>T-SHIRTS</h2>
+      <h5>New Trendy Prints</h5>
+    </div>
+  </div>
+</section>
+
+<section class="product-section section-p1">
+  <h1>Featured Products</h1>
+  <p>Summer Collection New Modern Design</p>
+  <div class="pro-collection">
+    {% for product in products %}
+    <div class="product-cart">
+      <img src="{{product.imageURL}}" alt="product image" />
+      <span>Adidas</span>
+      <h4>{{product.name}}</h4>
+      <div class="stars">
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+      </div>
+      <h4 class="price">${{product.price|floatformat:2}}</h4>
+      <i class="fa-solid fa-cart-shopping buy-icon add-btn update-cart" data-product={{product.id}}
+        data-action="add"></i>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section id="off-banner" class="section-m1">
+  <h4>Repair Services</h4>
+  <h2>Up to 70% Off - All T-Shirts & Accessories</h2>
+  <button class="normal">Explore More</button>
+</section>
+
+<section class="product-section section-p1">
+  <h1>New Arrival</h1>
+  <p>Summer Collection New Modern Design</p>
+  <div class="pro-collection">
+    {% for product_new in new_arrivals %}
+    <div class="product_new-cart product-cart">
+      <img src="{{product_new.imageURL}}" alt="product image" />
+      <span>Adidas</span>
+      <h4>{{product_new.name}}</h4>
+      <div class="stars">
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+      </div>
+      <h4 class="price">${{product_new.price|floatformat:2}}</h4>
+      <i class="fa-solid fa-cart-shopping buy-icon add-btn update-cart" data-product={{product_new.id}}
+        data-action="add"></i>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+<section id="newsletter">
+  <div class="newsletter-text">
+    <h3>Sign Up For Newsletters</h3>
+    <h5>get e-mail updates about out latest shop and <span>special offers</span></h5>
+  </div>
+  <div class="form">
+    <input type="email" placeholder="Your email address" id="email-address-input">
+    <button>Sign Up</button>
+  </div>
+</section>
+{% endblock content %}

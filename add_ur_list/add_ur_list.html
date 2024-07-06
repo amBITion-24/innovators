@@ -1,0 +1,289 @@
+{% extends "store/main.html" %}
+{% block content %}
+<style>
+    body {
+        background: #eee
+    }
+
+    #regForm {
+        background-color: #ffffff;
+        margin: 60px 60px 60px;
+        font-family: Raleway;
+        padding: 40px;
+        border-radius: 10px
+    }
+
+    #register {
+
+        color: #6A1B9A;
+    }
+
+    h1 {
+        text-align: center
+    }
+
+    input {
+        padding: 10px;
+        width: 100%;
+        font-size: 17px;
+        font-family: Raleway;
+        border: 1px solid #aaaaaa;
+        border-radius: 10px;
+        -webkit-appearance: none;
+    }
+
+
+
+    .tab input:focus {
+
+        border: 1px solid #6a1b9a !important;
+        outline: none;
+    }
+
+    input.invalid {
+
+        border: 1px solid #e03a0666;
+    }
+
+    .tab {
+        display: none
+    }
+
+    button {
+        background-color: #6A1B9A;
+        color: #ffffff;
+        border: none;
+        border-radius: 50%;
+        padding: 10px 20px;
+        font-size: 17px;
+        font-family: Raleway;
+        cursor: pointer
+    }
+
+    button:hover {
+        opacity: 0.8
+    }
+
+    button:focus {
+
+        outline: none !important;
+    }
+
+    #prevBtn {
+        background-color: #bbbbbb
+    }
+
+
+    .all-steps {
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        width: 100%;
+        display: inline-flex;
+        justify-content: center;
+    }
+
+    .step {
+        height: 40px;
+        width: 40px;
+        margin: 0 2px;
+        background-color: #bbbbbb;
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+        color: #6a1b9a;
+        opacity: 0.5;
+    }
+
+    .step.active {
+        opacity: 1
+    }
+
+
+    .step.finish {
+        color: #fff;
+        background: #6a1b9a;
+        opacity: 1;
+
+    }
+
+
+
+    .all-steps {
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 30px
+    }
+
+    .thanks-message {
+        display: none
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-8">
+            <form id="regForm" method="POST">
+                {% csrf_token %}
+
+                <h1 id="register">Add Your Items</h1>
+                <div class="all-steps" id="all-steps">
+                    <span class="step"><i class="fa fa-th-list"></i></span>
+                </div>
+
+                <div class="tab">
+                    <h4 style="color:black">What's your Item you want to add ?</h4 style="color:black">
+                    <p>
+                        <input placeholder="ex., Fruits" oninput="this.className = ''" name="item">
+                    </p>
+
+                </div>
+
+
+
+                <div class="thanks-message text-center" id="text-message"> <img src="https://i.imgur.com/O18mJ1K.png"
+                        width="100" class="mb-4">
+                    <h3>Item Added!</h3>
+                </div>
+                <div style="overflow:auto;" id="nextprevious">
+                    <div style="float:right;">
+                        <button type="button" type="submit" id="nextBtn" onclick="nextPrev(1)"><i
+                                class="fa fa-angle-double-right"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- form end -->
+        <!-- form list start -->
+
+        <div class="content">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Congrats!</strong> {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% if all_items %}
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center" scope="col">Item</th>
+                            <th class="text-center" scope="col">Action</th>
+                            <th class="text-center" scope="col">Edit</th>
+                            <th class="text-center" scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for thing in all_items %}
+                        {% if thing.completed %}
+                        <tr class="table-secondary">
+                            <td class="striker text-center">{{ thing.item }}</td>
+                            <td class="text-center"><a class="btn btn-primary"
+                                    href="{% url 'uncross' thing.id %}">Uncross</a></td>
+                            <td class="text-center"><a class="btn btn-warning" href="{% url 'edit' thing.id %}">Edit</a>
+                            </td>
+                            <td class="text-center"><a class="btn btn-danger"
+                                    href="{% url 'delete' thing.id %}">Delete</a></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td class="text-center">{{ thing.item }}</td>
+                            <td class="text-center"><a class="btn btn-primary"
+                                    href="{% url 'cross_off' thing.id %}">Cross off</a></td>
+                            {% comment %} <!-- <td class="text-center"><a class="btn btn-warning" href="{% url 'edit' thing.id %}">Edit</a> --> {% endcomment %}
+                            </td>
+                            <td class="text-center"><a class="btn btn-danger"
+                                    href="{% url 'delete' thing.id %}">Delete</a></td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+        <!-- form list end-->
+
+
+    </div>
+</div>
+
+
+<script>var currentTab = 0;
+    document.addEventListener("DOMContentLoaded", function (event) {
+
+
+        showTab(currentTab);
+
+    });
+
+    function showTab(n) {
+        var x = document.getElementsByClassName("tab");
+        x[n].style.display = "block";
+        if (n == 0) {
+            document.getElementById("prevBtn").style.display = "none";
+        } else {
+            document.getElementById("prevBtn").style.display = "inline";
+        }
+        if (n == (x.length - 1)) {
+            document.getElementById("nextBtn").innerHTML = '<i class="fa fa-angle-double-right"></i>';
+        } else {
+            document.getElementById("nextBtn").innerHTML = '<i class="fa fa-angle-double-right"></i>';
+        }
+        fixStepIndicator(n)
+    }
+
+    function nextPrev(n) {
+        var x = document.getElementsByClassName("tab");
+        if (n == 1 && !validateForm()) return false;
+        x[currentTab].style.display = "none";
+        currentTab = currentTab + n;
+        if (currentTab >= x.length) {
+
+            document.getElementById("nextprevious").style.display = "none";
+            document.getElementById("all-steps").style.display = "none";
+            document.getElementById("register").style.display = "none";
+            document.getElementById("text-message").style.display = "block";
+
+
+
+
+        }
+        showTab(currentTab);
+    }
+
+    function validateForm() {
+        var x, y, i, valid = true;
+        x = document.getElementsByClassName("tab");
+        y = x[currentTab].getElementsByTagName("input");
+        for (i = 0; i < y.length; i++) {
+            if (y[i].value == "") {
+                y[i].className += " invalid";
+                valid = false;
+            }
+
+
+        }
+        if (valid) {
+            document.getElementsByClassName("step")[currentTab].className += " finish";
+        }
+        return valid;
+    }
+
+    function fixStepIndicator(n) {
+        var i, x = document.getElementsByClassName("step");
+        for (i = 0; i < x.length; i++) {
+            x[i].className = x[i].className.replace(" active", "");
+        }
+        x[n].className += " active";
+    }</script>
+{% endblock content %}
